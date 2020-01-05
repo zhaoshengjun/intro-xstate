@@ -8,11 +8,16 @@ function lightBulb() {
 		},
 
 		toggle() {
+			if (isBroken) {
+				isLit = false;
+				return;
+			}
 			isLit = !isLit;
 		},
 
 		break() {
 			isBroken = true;
+			isLit = false;
 		}
 	};
 }
