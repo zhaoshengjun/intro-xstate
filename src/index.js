@@ -21,3 +21,6 @@ const buble = lightBulb();
 const log = () => {
 	console.log(buble.state());
 };
+buble.toggle();
+buble.break();
+log();
