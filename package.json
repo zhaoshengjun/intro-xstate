@@ -1,0 +1,16 @@
+{
+	"name": "intro-xstate",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "Sam Zhao <zhao.shengjun@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"dev": "babel src -d lib && node lib/index.js"
+	},
+	"devDependencies": {
+		"@babel/cli": "7.7.7",
+		"@babel/core": "7.7.7",
+		"@babel/preset-env": "7.7.7",
+		"xstate": "4.7.5"
+	}
+}
