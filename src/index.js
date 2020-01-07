@@ -8,9 +8,14 @@ const lightBubleMachine = Machine({
 			on: {
 				BREAK: {
 					target: "broken",
-					actions: (context, event) => {
-						console.log({ context, event });
-					}
+					actions: [
+						(context, event) => {
+							console.log({ context, event });
+						},
+						event => {
+							console.log("broken", event);
+						}
+					]
 				},
 				TOGGLE: "unlit"
 			}
