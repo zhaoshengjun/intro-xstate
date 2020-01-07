@@ -1,4 +1,4 @@
-import { Machine } from "xstate";
+import { Machine, interpret } from "xstate";
 
 const lightBubleMachine = Machine({
 	id: "lightBuble",
@@ -20,7 +20,8 @@ const lightBubleMachine = Machine({
 	}
 });
 
-console.log(lightBubleMachine.initialState.value);
-console.log(lightBubleMachine.transition("unlit", "TOGGLE").value);
-console.log(lightBubleMachine.transition("unlit", "BREAK").value);
-console.log(lightBubleMachine.transition("broken", "TOGGLE").value);
+const service = interpret(lightBubleMachine).start();
+
+service.onTransition(state => console.log(state.value));
+service.send("TOGGLE");
+service.send("BREAK");
