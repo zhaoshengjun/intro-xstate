@@ -20,7 +20,7 @@ const lightBubleMachine = Machine({
 	}
 });
 
-const service = interpret(lightBubleMachine).start();
+const service = interpret(lightBubleMachine).start("lit");
 
 service.onTransition(state => console.log(state.value));
 service.send("TOGGLE");
