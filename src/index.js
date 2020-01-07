@@ -6,7 +6,12 @@ const lightBubleMachine = Machine({
 	states: {
 		lit: {
 			on: {
-				BREAK: "broken",
+				BREAK: {
+					target: "broken",
+					actions: (context, event) => {
+						console.log({ context, event });
+					}
+				},
 				TOGGLE: "unlit"
 			}
 		},
@@ -23,5 +28,6 @@ const lightBubleMachine = Machine({
 const service = interpret(lightBubleMachine).start("lit");
 
 service.onTransition(state => console.log(state.value));
+service.send("TOGGLE");
 service.send("TOGGLE");
 service.send("BREAK");
