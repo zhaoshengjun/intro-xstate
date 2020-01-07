@@ -1,34 +1,39 @@
 import { Machine, interpret } from "xstate";
 
-const lightBubleMachine = Machine({
-	id: "lightBuble",
-	initial: "unlit",
-	states: {
-		lit: {
-			on: {
-				BREAK: {
-					target: "broken",
-					actions: [
-						(context, event) => {
-							console.log({ context, event });
-						},
-						event => {
-							console.log("broken", event);
-						}
-					]
-				},
-				TOGGLE: "unlit"
+const lightBubleMachine = Machine(
+	{
+		id: "lightBuble",
+		initial: "unlit",
+		states: {
+			lit: {
+				on: {
+					BREAK: {
+						target: "broken",
+						actions: ["logBroken", "log"]
+					},
+					TOGGLE: "unlit"
+				}
+			},
+			unlit: {
+				on: {
+					BREAK: "broken",
+					TOGGLE: "lit"
+				}
+			},
+			broken: {}
+		}
+	},
+	{
+		actions: {
+			logBroken: (context, event) => {
+				console.log({ context, event });
+			},
+			log: event => {
+				console.log("broken", event);
 			}
-		},
-		unlit: {
-			on: {
-				BREAK: "broken",
-				TOGGLE: "lit"
-			}
-		},
-		broken: {}
+		}
 	}
-});
+);
 
 const service = interpret(lightBubleMachine).start("lit");
 
