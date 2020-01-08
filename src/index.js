@@ -11,7 +11,7 @@ const idleMachine = Machine(
 			}
 		},
 		on: {
-			DO_NOTHING: "idle"
+			DO_NOTHING: ".idle"
 		}
 	},
 	{
