@@ -6,11 +6,9 @@ const lightBubleMachine = Machine(
 		initial: "unlit",
 		states: {
 			lit: {
+				exit: ["darkAndCold"],
 				on: {
-					BREAK: {
-						target: "broken",
-						actions: ["logBroken", "log"]
-					},
+					BREAK: "broken",
 					TOGGLE: "unlit"
 				}
 			},
@@ -20,7 +18,9 @@ const lightBubleMachine = Machine(
 					TOGGLE: "lit"
 				}
 			},
-			broken: {}
+			broken: {
+				entry: ["logBroken"]
+			}
 		}
 	},
 	{
@@ -28,9 +28,7 @@ const lightBubleMachine = Machine(
 			logBroken: (context, event) => {
 				console.log({ context, event });
 			},
-			log: event => {
-				console.log("broken", event);
-			}
+			darkAndCold: () => console.log("It's getting dark and cold.")
 		}
 	}
 );
