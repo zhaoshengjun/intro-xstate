@@ -1,22 +1,32 @@
-import { Machine, interpret, send } from "xstate";
+import { Machine, interpret, assign } from "xstate";
 
-const echoMachine = Machine({
-	id: "echo",
-	initial: "listening",
+const multiColorBulbMachine = Machine({
+	id: "multiColorBulb",
+	initial: "unlit",
 	states: {
-		listening: {
+		lit: {
 			on: {
-				SPEAK: {
-					actions: send("ECHO")
-				},
-				ECHO: {
-					actions: () => console.log("echo, echo")
-				}
+				BREAK: "broken",
+				TOGGLE: "unlit"
 			}
+		},
+		unlit: {
+			on: {
+				BREAK: "broken",
+				TOGGLE: "lit"
+			}
+		},
+		broken: {
+			type: "final"
 		}
 	}
 });
 
-const service = interpret(echoMachine).start();
-service.send("SPEAK");
-service.send("SPEAK");
+const service = interpret(multiColorBulbMachine).start();
+console.log(service.state.value);
+service.send("TOGGLE");
+console.log(service.state.value);
+service.send("TOGGLE");
+console.log(service.state.value);
+service.send("BREAK");
+console.log(service.state.value);
