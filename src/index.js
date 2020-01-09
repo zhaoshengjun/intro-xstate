@@ -1,4 +1,4 @@
-import { Machine, interpret } from "xstate";
+import { Machine, interpret, send } from "xstate";
 
 const echoMachine = Machine({
 	id: "echo",
@@ -6,7 +6,9 @@ const echoMachine = Machine({
 	states: {
 		listening: {
 			on: {
-				SPEAK: {},
+				SPEAK: {
+					actions: send("ECHO")
+				},
 				ECHO: {
 					actions: () => console.log("echo, echo")
 				}
@@ -17,4 +19,4 @@ const echoMachine = Machine({
 
 const service = interpret(echoMachine).start();
 service.send("SPEAK");
-service.send("ECHO");
+service.send("SPEAK");
