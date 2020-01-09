@@ -4,18 +4,19 @@ const multiColorBulbMachine = Machine({
 	id: "multiColorBulb",
 	initial: "unlit",
 	states: {
-		lit: {
-			on: {
-				BREAK: "broken",
-				TOGGLE: "unlit"
-			}
-		},
 		unlit: {
 			on: {
-				BREAK: "broken",
-				TOGGLE: "lit"
+				TOGGLE: "lit",
+				BREAK: "broken"
 			}
 		},
+		lit: {
+			on: {
+				TOGGLE: "unlit",
+				BREAK: "broken"
+			}
+		},
+
 		broken: {
 			type: "final"
 		}
