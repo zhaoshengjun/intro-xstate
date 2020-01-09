@@ -1,26 +1,20 @@
 import { Machine, interpret } from "xstate";
 
-const idleMachine = Machine(
-	{
-		id: "idle",
-		initial: "idle",
-		states: {
-			idle: {
-				entry: ["logEntry"],
-				exit: ["logExit"]
+const echoMachine = Machine({
+	id: "echo",
+	initial: "listening",
+	states: {
+		listening: {
+			on: {
+				SPEAK: {},
+				ECHO: {
+					actions: () => console.log("echo, echo")
+				}
 			}
-		},
-		on: {
-			DO_NOTHING: ".idle"
-		}
-	},
-	{
-		actions: {
-			logEntry: () => console.log("entered"),
-			logExit: () => console.log("exited")
 		}
 	}
-);
+});
 
-const service = interpret(idleMachine).start();
-service.send("DO_NOTHING");
+const service = interpret(echoMachine).start();
+service.send("SPEAK");
+service.send("ECHO");
