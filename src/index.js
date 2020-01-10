@@ -1,48 +1,35 @@
-import { Machine, interpret } from "xstate";
+import { Machine, interpret, assign } from "xstate";
 
-const multiColorBulbMachine = Machine(
+const doubleCounterMachine = Machine(
 	{
-		id: "multiColorBulb",
-		initial: "unlit",
+		id: "doubleCounter",
+		initial: "idle",
 		context: {
-			color: "#fff"
+			count: 0
 		},
 		states: {
-			unlit: {
+			idle: {
 				on: {
-					TOGGLE: "lit",
-					BREAK: "broken"
-				}
-			},
-			lit: {
-				on: {
-					TOGGLE: "unlit",
-					BREAK: "broken",
-					CHANGE_COLOR: {
-						actions: ["changeColor"]
+					INC_COUNT_TWICE: {
+						actions: [
+							context => console.log(`Before: ${context.count}`),
+							"incCount",
+							"incCount",
+							context => console.log(`After: ${context.count}`)
+						]
 					}
 				}
-			},
-
-			broken: {
-				type: "final"
 			}
 		}
 	},
 	{
 		actions: {
-			changeColor: (context, event) => console.log({ context, event })
+			incCount: assign({ count: context => context.count + 1 })
 		}
 	}
 );
 
-const service = interpret(multiColorBulbMachine).start();
+const service = interpret(doubleCounterMachine).start();
 console.log(service.state.value);
-service.send("TOGGLE");
-console.log(service.state.value);
-service.send("CHANGE_COLOR", { color: "#f00" });
-console.log(service.state.value);
-service.send("TOGGLE");
-console.log(service.state.value);
-service.send("BREAK");
+service.send("INC_COUNT_TWICE");
 console.log(service.state.value);
