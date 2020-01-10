@@ -5,14 +5,17 @@ const doubleCounterMachine = Machine(
 		id: "doubleCounter",
 		initial: "idle",
 		context: {
-			count: 0
+			count: 0,
+			previousCount: undefined
 		},
 		states: {
 			idle: {
 				on: {
 					INC_COUNT_TWICE: {
 						actions: [
-							context => console.log(`Before: ${context.count}`),
+							context =>
+								console.log(`Before: ${context.previousCount}`),
+							"setPreviousCount",
 							"incCount",
 							"incCount",
 							context => console.log(`After: ${context.count}`)
@@ -24,7 +27,10 @@ const doubleCounterMachine = Machine(
 	},
 	{
 		actions: {
-			incCount: assign({ count: context => context.count + 1 })
+			incCount: assign({ count: context => context.count + 1 }),
+			setPreviousCount: assign({
+				previousCount: context => context.count
+			})
 		}
 	}
 );
