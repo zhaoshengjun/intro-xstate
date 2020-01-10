@@ -1,47 +1,25 @@
 import { Machine, interpret, assign } from "xstate";
 
-const doubleCounterMachine = Machine(
-	{
-		id: "doubleCounter",
-		initial: "idle",
-		context: {
-			count: 0,
-			previousCount: undefined
-		},
-		states: {
-			idle: {
-				on: {
-					INC_COUNT_TWICE: {
-						actions: [
-							"setPreviousCount",
-							context =>
-								console.log(`Before: ${context.previousCount}`),
-							"incCount",
-							"incCount",
-							context => console.log(`After: ${context.count}`)
-						]
-					}
-				}
+const alarmClockMachine = Machine({
+	id: "alarmClock",
+	initial: "idle",
+	states: {
+		idle: {
+			on: {
+				ALARM: "alarming"
 			}
-		}
-	},
-	{
-		actions: {
-			incCount: (context, event) => {
-				console.log("incCount: ", { context });
-				context.count = context.count + 1;
-			},
-			setPreviousCount: (context, event) => {
-				console.log("setPreviousCount: ", { context });
-				setTimeout(() => {
-					context.previousCount = context.count;
-				}, 1000);
+		},
+		alarming: {
+			on: {
+				STOP: "idle"
 			}
 		}
 	}
-);
+});
 
-const service = interpret(doubleCounterMachine).start();
+const service = interpret(alarmClockMachine).start();
 console.log(service.state.value);
-service.send("INC_COUNT_TWICE");
+service.send("ALARM");
+console.log(service.state.value);
+service.send("STOP");
 console.log(service.state.value);
